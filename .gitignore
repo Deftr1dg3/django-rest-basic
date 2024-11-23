@@ -1,0 +1,13 @@
+
+.benchmarks
+.pytest_cache
+.vscode
+__pycache__/
+*.pyc
+static/
+media/
+logs/
+db_backup*
+db.sqlite3
+Django\ 3*
+*env*

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block root %}
+
+<h2>Hello From Home Page</h2>
+<h1>Answers = {{ num }}</h1>
+<h2>Results:</h2>
+
+
+<h3>Result: {{ result }}</h3>
+
+{% for row in iterable %}
+
+<li>{{ row }}</li>
+
+{% endfor %}
+
+
+
+{% endblock %}
