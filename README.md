@@ -151,20 +151,18 @@ Allows to add items to the database
 
     % inst.item_set.create(arg1="", arg2="", ...)
 
-
-
 # See Rqw SQL query ----
 
 ```python
-# Execute customer SQL 
+# Execute custom SQL
 raw_query = "SELECT * FROM store_customer WHERE first_name = %s"
 queryset = Customer.objects.raw(raw_query, ['Dory'])
 
-# See raw SQL 
+# See raw SQL
 print(f'\nRAW SQL QUERY:\n{queryset.query}\n')
 
 # Modifying SQL Queries with Extra Clauses -- DEPRICATED
-# If you need to add extra SQL clauses or annotations, you can use .extra() 
+# If you need to add extra SQL clauses or annotations, you can use .extra()
 # with Django’s ORM to append custom SQL conditions without going fully raw.
 
 queryset = MyModel.objects.extra(
@@ -182,28 +180,25 @@ Use .raw() for custom SQL execution.
 Use .extra() for additional SQL clauses.
 Use Django Debug Toolbar or logging for debugging.
 
-
-
-32. Create superuser in django 
+32. Create superuser in django
 
 python manage.py createsuperuser
 
-
 33. Disable all username and password validations:
 
-Add next row to settings.py file 
+Add next row to settings.py file
 
+```python
 AUTH_PASSWORD_VALIDATORS = []
+```
 
+34. Change admin password in terminal
 
-34. Change admin password in terminal 
+python manage.py changepassword admin
 
-python manage.py changepassword admin 
+35. Register models
 
-
-35. Register models 
-
-Go to the desired app folder > admin.py 
+Go to the desired app folder > admin.py
 
 REGISTER:
 
@@ -225,7 +220,7 @@ Best practice with ability to make custome changes:
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
     list_display = ['title', 'products_count']
-    
+
     # Override parent class method
     # to get needed results
     def get_queryset(self, request):
@@ -239,15 +234,11 @@ class CollectionAdmin(admin.ModelAdmin):
         return collection.products_count
 ```
 
-
-
-
-
 # Django Debug Toolbar ----------------------------
 
 ## 1.Install Django Debug Toolbar
 
-% pip install django-debug-toolbar
+    % pip install django-debug-toolbar
 
 ## 2. Add debugger to the applications list in the
 
@@ -257,72 +248,79 @@ add - 'debug_toolbar'
 
 ## 3. Add debugger to the main urls.py
 
-    import debug_tools
-    ...
-    ...
-    urlpatterns = [
+```python
+import debug_tools
+
+...
+...
+urlpatterns = [
     # ...
     path("__debug__/", include("debug_toolbar.urls")),
-
 ]
+```
 
 ## 4. Add debugger to the MIDDLEWARE in settings.py
 
+```python
 MIDDLEWARE = [
 ...
 "debug_toolbar.middleware.DebugToolbarMiddleware",
 ...
 ]
+```
 
 ## 5. Insert into settings.py
 
+```python
 INTERNAL_IPS = [
 ...
 "127.0.0.1",
 ...
 ]
+```
 
 ## 6. Applay all changes befor you start using the
 
 ## debugger. Otherwise an Error will appear.
 
-% python manage.py makemigrations
-% python manage.py migrate
+    $ python manage.py makemigrations
+    $ python manage.py migrate
 
-# Second Debug option - .vscode/launch.json file 
+# Second Debug option - .vscode/launch.json file
 
 Create file if not exists and add next content to the file:
 
+```json
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Django",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/manage.py",
-            "args": ["runserver", "--noreload"],
-            "django": true,
-            "justMyCode": true,
-            "console": "integratedTerminal",
-            "env": {
-                "DJANGO_DEBUG": "1"
-            }
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Django",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/manage.py",
+      "args": ["runserver", "--noreload"],
+      "django": true,
+      "justMyCode": true,
+      "console": "integratedTerminal",
+      "env": {
+        "DJANGO_DEBUG": "1"
+      }
+    }
+  ]
 }
+```
 
- OR
+OR
 
 Go to > Debug Panel on the Let side > choose "create launch.json" file > choose Pytho ... from dropdown at the top
- > choose Django Launch and Debug.
 
-
+> choose Django Launch and Debug.
 
 # Django TESTS With QODO----------------------------
 
 Ensure that DJANGO_SETTINGS_MODULE environment variable is set,
-before running tests. 
+before running tests.
 
 export DJANGO_SETTINGS_MODULE=[project_name].settings
 
@@ -331,11 +329,12 @@ export DJANGO_SETTINGS_MODULE=[project_name].settings
 With next content:
 
     [pytest]
-    DJANGO_SETTINGS_MODULE=config.settings 
+    DJANGO_SETTINGS_MODULE=config.settings
     python_files = test.py test_*.py *_test.py
 
-## Or "conftest.py" 
-With next content: 
+## Or "conftest.py"
+
+With next content:
 
     import os
     import pytest
@@ -351,16 +350,15 @@ With next content:
     def enable_db_access_for_all_tests(db):
         pass
 
-
-@pytest.mark.django_db (on function or class): This marker tells pytest that the test 
-will interact with the database. 
+@pytest.mark.django_db (on function or class): This marker tells pytest that the test
+will interact with the database.
 It sets up and tears down the test database for each test.
 
-Run pytest: 
+Run pytest:
 
-    $ pytest 
+    $ pytest
 
-    or 
+    or
 
     $ pytest -v
 
@@ -378,34 +376,31 @@ Run pytest:
 
 Advance:
 
-pytest-cov: For measuring test coverage
+    For measuring test coverage:
+    pytest-cov
     pip install pytest-cov
     pytest --cov=your_app tests/
 
-pytest-xdist: For parallel test execution
+    For parallel test execution:
+    pytest-xdist
     pip install pytest-xdist
-    
-Run tests in parallel:
+
+    Run tests in parallel:
     pytest -n auto
 
-pytest-django 
+    pytest-django
 
-pytest-benchmark
+    pytest-benchmark
 
-pytest-behave
-
-
-
-
-
+    pytest-behave
 
 # Database Migrations to Django Project ---------------------------
 
 To SQL code of migration use:
 
-    python manage.py makemigrations 
+    python manage.py makemigrations
 
-    python manage.py migrate 
+    python manage.py migrate
 
 See SQL request of migration:
 
@@ -419,14 +414,11 @@ To revert only the last migration of a specific app, you can run the following c
 
     python manage.py migrate <app_name> <previous_migration>
 
-    
-This command tells Django to revert all 
-migrations for that app back to "zero," effectively 
+This command tells Django to revert all
+migrations for that app back to "zero," effectively
 rolling back all migrations for that app.
 
     python manage.py migrate your_app_name zero
-
-    
 
 # Connect PostgreSQL to Django project ---------------------------------------------------
 
@@ -434,11 +426,11 @@ Run the following command to install the PostgreSQL adapter for Python:
 
     pip install psycopg2
 
-    psycopg2 is a PostgreSQL adapter for Python, and it is necessary when using 
-    Django with a PostgreSQL database because it allows Django 
+    psycopg2 is a PostgreSQL adapter for Python, and it is necessary when using
+    Django with a PostgreSQL database because it allows Django
     to communicate with PostgreSQL
 
-Update settings.py: In your Django project’s settings.py file, 
+Update settings.py: In your Django project’s settings.py file,
 configure the DATABASES setting as follows:
 
     DATABASES = {
@@ -450,25 +442,25 @@ configure the DATABASES setting as follows:
         'HOST': 'localhost',  # or your PostgreSQL host
         'PORT': '5432',        # default PostgreSQL port
     }
-}
 
+}
 
 # Custom SQL ------------------------------------------------
 
 1. Create an empty migration:
 
-    python manage.py makemigrations <table_name> --empty
+   python manage.py makemigrations <table_name> --empty
 
 Use migrations.RunSQL(sql="""""", reverse_sql="""""") in the
-empty migration under "operations" fiels. 
+empty migration under "operations" fiels.
 sql -> Raw SQL that will be executed in "mograte" command.
 reverse_sql -> Raw SQL that will be executed on roll back.
 
 Example new empty migration file content:
-    
+
     from django.db import migrations
 
-
+```python
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -483,76 +475,65 @@ class Migration(migrations.Migration):
         DELETE FROM store_collection WHERE title='collection1'
         """)
     ]
+```
 
+### REDIS FOR CELERY ----------------------------
 
-### REDIS ----------------------------
+Run in docker container
+and install via pip: pip insatll redis
 
-Run in docker container 
-and install via pip: pip insatll redis 
+name: redis, port 6379
 
-name: redis, port 6379 
+### CELERY ---------------------------
 
-
-### Celery ---------------------------
-
-pip install celery 
+pip install celery
 
 run in terminal to start worker process:
 
-celery -A <packasge_name or modeule_name> worker --loglevel=info(for development)
-    
--A - application. 
+    celery -A <packasge_name or modeule_name> worker --loglevel=info(for development)
 
-If you use packge name, import 
-Celery app from its module to __init__.py in the target package
+-A - application.
+
+If you use packge name, import
+Celery app from its module to **init**.py in the target package
 
 To start beat (scheduled tasks execution) process:
 
-celery -A config beat
-
-
+    celery -A config beat
 
 # Flower to monitor celery processes ---------------
 
-pip install flower
+    pip install flower
 
 To start flower process:
 
-celery -A <name> flower
+    celery -A <name> flower
 
 You can access it on localhost:5555
 
-
-
-
-
 ### TESTS --------------------
 
-pip install pytest pytest-django 
+pip install pytest pytest-django
 pip install model-bakery
 
 model_bakery is a package used for creating test data in Django applications.
 
-
-
-
-Naming conventions. 
+Naming conventions.
 
 PyTest will look for a folder 'tests' (in plural form, it is important)
 
-Names of files in tests folder should start with 'test_'
+Names of files in tests folder should start with 'test\_'
 
-Names of test function should start with 'def test_'
+Names of test function should start with 'def test\_'
 
 Name of the function has clearly describe the behaviour you are testing.
 Example:
 
 def test_if_user_anonimus_returns_401():
-    ...
+...
 
 Because during the testing you can see names of the functions only.
 And you should understand by the name where the issue occures.
-
 
 Use classes to gather tests with main purpose.
 Example:
@@ -564,38 +545,40 @@ class TestCreateCollection:
 
     def test_if_user_not_admin_returns_403():
         ...
-    
+
 ```
+
 Every test has to have three parts -> 'AAA' triple A
 
 Arrange, Act, Assert
 
 Arrange:
-Initial part. Creating objects, preparing data, etc 
+Initial part. Creating objects, preparing data, etc
 
 Act:
-Behavious we want to test 
+Behavious we want to test
 client = APIClient()
+
 # Always add forward slash to the end of the path, otherwise
+
 # you'll get an error
+
 client.post('/store/collections/')
 
 Assert:
 Checking if the behaviour to be exepect is
 what actually happens.
 
-
-To setup pytest, create 'pytest.ini' file in the root directory of the project 
+To setup pytest, create 'pytest.ini' file in the root directory of the project
 Example:
 [pytest]
-DJANGO_SETTINGS_MODULE=config.settings 
+DJANGO*SETTINGS_MODULE=config.settings
 filterwarnings =
-    ignore::django.utils.deprecation.RemovedInDjango60Warning
-; python_files = test.py test_*.py *_test.py 
+ignore::django.utils.deprecation.RemovedInDjango60Warning
+; python_files = test.py test*_.py _\_test.py
 ; benchmark-autosave = true
 ; benchmark-min-rounds = 5
-; benchmark-max-time = 1.0  # Stop after 1 second
-
+; benchmark-max-time = 1.0 # Stop after 1 second
 
 Errors:
 The errors you're seeing indicate that there is a missing module called model_bakery that is required by your test files.
@@ -603,52 +586,49 @@ model_bakery is a package used for creating test data in Django applications.
 
 pip install model-bakery
 
-
 Execute tests:
 
-$ pytest -> to execute all tests in project 
+$ pytest -> to execute all tests in project
 
-$ pytest store/tests -> executes tests only in specified dir 
+$ pytest store/tests -> executes tests only in specified dir
 
-$ pytest store/tests/test_collection.py -> test specified module only 
+$ pytest store/tests/test_collection.py -> test specified module only
 
-$ pytest store/tests/test_collection.py::TestCreateCollection -> test specified class only 
+$ pytest store/tests/test_collection.py::TestCreateCollection -> test specified class only
 
-$ pytest store/tests/test_collection.py::TestCreateCollection::test_... -> test specified method only 
+$ pytest store/tests/test*collection.py::TestCreateCollection::test*... -> test specified method only
 
-$ pytest -k anonimus -> executes all tests that have 'anonimus' in their names 
-
+$ pytest -k anonimus -> executes all tests that have 'anonimus' in their names
 
 Skipping some tests:
 
-apply decorator @pytest.mark.skip on desired test 
+apply decorator @pytest.mark.skip on desired test
 
 ### Continuous testing ----------------
 
-pip install pytest-watch 
+pip install pytest-watch
 
 Execute $ ptw instead of $ pytest in separate Terminal window.
 This will run all tests and rerun them every time you change the code.
-
 
 # Configure tests in VSCode:
 
 Click in lask image on the left panel -> Configure Python Tests -> pytest -> Root directory
 Thi wil pickup all tests form all apps.
 
-
 # Use pytest.fixtures to remove duplicates in code.
 
 For global Fixtures in the app:
 
-Create 'conftest.py' in 'tests' dir file. 
+Create 'conftest.py' in 'tests' dir file.
 Fixtures or othe structures defined in this file, pytest will load automatically.
 
 Example:
-```python 
-from rest_framework.test import APIClient 
 
-import pytest 
+```python
+from rest_framework.test import APIClient
+
+import pytest
 
 
 @pytest.fixture
@@ -656,12 +636,13 @@ def api_client():
     return APIClient()
 
 ```
+
 In this example fixture api_client() will be created once and will
 be available in all tests.
 
 The fixture will be passed to the test function as an argument:
 
-```python 
+```python
 def test_if_data_is_invalid_returns_400(self, api_client):
         api_client.force_authenticate(user=User(is_staff=True))
         response = cast(Response, api_client.post('/store/collections/', {'title': ''}))
@@ -669,7 +650,7 @@ def test_if_data_is_invalid_returns_400(self, api_client):
 
 For local fixtures in the module:
 
-Create function in the same module on the top 
+Create function in the same module on the top
 Example of fixture with ability to pass arguments
 
 ```python
@@ -677,11 +658,11 @@ Example of fixture with ability to pass arguments
 def create_collection(api_client):
     def do_create_collection(collection):
         response = api_client.post('/store/collections/', collection)
-        return response 
+        return response
     return do_create_collection
 ```
 
-## Use model_bakery to create models withous fullfilling all the fields 
+## Use model_bakery to create models withous fullfilling all the fields
 
 ALWAYS USER '/' IN THE END OF THE ADDRESS.
 OTHERWISE YOU WILL GET 301 ERROR.
@@ -689,124 +670,131 @@ OTHERWISE YOU WILL GET 301 ERROR.
 Becase django automatically redirects all '/path/to/resource' to '/path/to/resource/'
 
 ```python
-@pytest.mark.django_db   
+@pytest.mark.django_db
 class TestRetriveCollaction:
     def test_if_collection_exists_returns_200(self, api_client):
-        # Arrange 
-        # First create collection 
+        # Arrange
+        # First create collection
         # collection = Collection.objects.create(title='Test')
         # we can use model_bakery to avoid fullfilling all fields in the model
         collection = baker.make(Collection)
-        
+
         # # example, creating 10 products in the same collection
         # products = baker.make(Product, collection=collection, _quantity=10)
         # Act
         response = api_client.get(f'/store/collections/{collection.id}/') # type: ignore
-        # Assert 
+        # Assert
         assert response.status_code == status.HTTP_200_OK
         # assert response.data['id'] == collection.id # type: ignore
         # assert response.data['title'] == collection.title # type: ignore
-        # better way to compare 
+        # better way to compare
         assert response.data == {
             'id': collection.id,
             'title': collection.title
         }
-``` 
-
+```
 
 ### Performance testing -------------------------
 
-Locust - performance testing tool with UI 
+Locust - performance testing tool with UI
 
 pip install locust
 
-Create 'locust' folder with testing modules like 'brows_products.py', 'user_auth.py', etc 
+Create 'locust' folder with testing modules like 'brows_products.py', 'user_auth.py', etc
 
 Run Locust:
 
 locust -f <folder>/<file_name>
 
-locust -f locust/brows_products.py 
-
-
-
-
+locust -f locust/brows_products.py
 
 ### OPTIMIZATIONS ---------------------------------
 
 # OPTIMIZATIONS -----------------------------------
 
 # In most of the cases to optimize performance needs to optimize
+
 # either request or the DB itself.
 
 # Request optimizations --------
 
-# Preload related objects 
+# Preload related objects
+
 # One to many, OneToOne
+
 Product.objects.select_related('...')
+
 # Many To Many, Reverse Relation
+
 Product.objects.prefetch_related('...')
 
 # Load only what you need
-Product.objects.only('title')
-# Oposit of .only()
-Product.objects.defer('description')   
 
-# Use values 
+Product.objects.only('title')
+
+# Oposit of .only()
+
+Product.objects.defer('description')
+
+# Use values
+
 # Get dictionary
+
 Product.objects.values()
+
 # Get list
+
 Product.objects.values_list()
+
 # Creating dict or list cheaper from creating Django Model
+
 # So if you do not need specific bahavious of Django Model
+
 # like create, update, delete, etc. Use those methods.
 
-# Count Properly 
+# Count Properly
+
 Product.objects.count() # Proper way to count objects
 len(Product.objects.all()) # BAD practice
 
 # Bulk create/update
+
 Product.objects.bulk_create([])
 
 ### Django_silk -------------------
 
-Profiling tool used to identify bottle necks in the app 
+Profiling tool used to identify bottle necks in the app
 
 URL: https://github.com/jazzband/django-silk
 
 > $ pip install django-silk
 
-
 Add silk to INSTALLED_APPS:
 
 INSTALLED_APPS = [
-    ...
-    'silk',
+...
+'silk',
 ]
-
 
 Add silk to MIDDLEWARE:
 
 MIDDLEWARE = [
-    'silk.middleware.SilkyMiddleware',
-    ...
+'silk.middleware.SilkyMiddleware',
+...
 ]
-
-
 
 Add silk to URL patterns:
 
 urlpatterns = [
-    ...
-    path('silk/', include('silk.urls', namespace='silk')),
+...
+path('silk/', include('silk.urls', namespace='silk')),
 ]
-
 
 RUN MIGRATIONS:
 
 > $ python manage.py migrate
 
-visit 'domain/silk' path 
+visit 'domain/silk' path
 
 POSSIBLE CONFIGURATIONS in 'settings.py' file:
 
@@ -819,11 +807,11 @@ SILKY_INTERCEPT_PERCENT = 100  # Percentage of requests to intercept (default: 1
 
 ### CACHING --------------------------------------
 
-Redis 
-Run in docker container 
-and install via pip: pip insatll redis 
+Redis
+Run in docker container
+and install via pip: pip insatll redis
 
-name: redis, port 6379 
+name: redis, port 6379
 
 To use Redis thogether with Django we should also install library called django-redis
 
@@ -845,62 +833,60 @@ CACHES = {
 }
 ```
 
-
-## Execute commands directly in Redis container 
+## Execute commands directly in Redis container
 
 docker exec -it redis_container redis-cli
 
-> select <db_numbe>r - to select databases in range 0 - 15 
+> select <db_numbe>r - to select databases in range 0 - 15
 
 > 127.0.0.1:6379> select 2
 
-> keys * - view all keys in DB 
+> keys \* - view all keys in DB
 
-> 127.0.0.1:6379[2]> keys *
+> 127.0.0.1:6379[2]> keys \*
 
-> del <key_name> - delete key 
+> del <key_name> - delete key
 
 > flushall - delete all the data
-
-
 
 ### Prepearing for production ----------------------------------------------------
 
 While DEBUG is True Django collects static file automatically.
 But for Production to collect statuic files needs to add a settings into
-the settings.py file 
+the settings.py file
 
 STATIC_URL = '/static/'
+
 # Settings up STATIS ROOT to let the Django know
+
 # where the static files located on disk
+
 # Thes will allow to collect static files from different apps to one place
-STATIC_ROOT = os.path.join(BASE_DIR, 'static') 
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 Then runcommand in terminal to collect the file to the 'static' folder in main dir:
 
 ## RUN THIS COMMAND EVERY TIME BEFORE DEPLOY ---------
-> $ python manage.py collectstatic 
 
+> $ python manage.py collectstatic
 
-
-## INstall 'whitenoise' library to serve 'static' files in production 
+## INstall 'whitenoise' library to serve 'static' files in production
 
 > $ pip install whitenoise
 
 Add 'whitenoise' to the middleware, as high as possible, but after 'Security Middleware':
 
 MIDDLEWARE = [
-    '...',
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    ...
-    ]
-
+'...',
+'django.middleware.security.SecurityMiddleware',
+'whitenoise.middleware.WhiteNoiseMiddleware',
+...
+]
 
 ### Configure logging ----------
 
-
-Add to 'settings.py' file 
+Add to 'settings.py' file
 
 ```python
 LOGGING = {
@@ -951,25 +937,18 @@ LOGGING = {
 
 ### Production Settings ------------------------------------------------------------
 
-
 Store all sensetive information in environment variables !!!
 
 Setting UP:
 
-Create 'settings' folder in 'config' dir 
+Create 'settings' folder in 'config' dir
 Move 'settings.py' to the 'settings' folder
 Remane file to 'common.py'
 
 Cretae specified files for different purposes:
 
-dev.py, prod.py, ... 
+dev.py, prod.py, ...
 
 At the first line of each file import all from common.py:
 
-> $ from .common import *
-
-
-
-
-
-
+> $ from .common import \*
